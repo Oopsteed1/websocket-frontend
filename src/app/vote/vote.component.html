@@ -1,0 +1,13 @@
+<div *ngIf="!isVotingStarted">
+  <input type="text" [(ngModel)]="votingTopic" placeholder="Enter voting topic">
+  <button (click)="startVoteWithTopic()">Start Vote</button>
+</div>
+<div *ngIf="isVotingStarted && !isVotingEnded">
+  <input type="text" [(ngModel)]="vote" placeholder="Your Name">
+  <button (click)="submitVote('agree')">Submit Agree</button>
+  <button (click)="submitVote('disagree')">Submit Disagree</button>
+</div>
+<button (click)="endVote()" *ngIf="isVotingEnded">End Vote</button>
+<div>
+  <p>{{ message }}</p>
+</div>
