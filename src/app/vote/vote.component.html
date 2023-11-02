@@ -1,11 +1,16 @@
 <div *ngIf="!isVotingStarted">
   <input type="text" [(ngModel)]="votingTopic" placeholder="Enter voting topic">
-  <button (click)="startVoteWithTopic()">Start Vote</button>
+  <button (click)="startVote('agreeOrDisagree', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Agree or Disagree</button>
+  <button (click)="startVote('rockPaperScissors', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Rock Paper Scissors</button>
+  <button (click)="startVote('lottery', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Lottery</button>
 </div>
 <div *ngIf="isVotingStarted && !isVotingEnded">
   <input type="text" [(ngModel)]="vote" placeholder="Your Name">
-  <button (click)="submitVote('agree')">Submit Agree</button>
-  <button (click)="submitVote('disagree')">Submit Disagree</button>
+  <button (click)="submitVote('agree')" *ngIf="voteType === 'agreeOrDisagree'">Agree</button>
+  <button (click)="submitVote('disagree')" *ngIf="voteType === 'agreeOrDisagree'">Disagree</button>
+  <button (click)="submitVote('rock')" *ngIf="voteType === 'rockPaperScissors'">Rock</button>
+  <button (click)="submitVote('paper')" *ngIf="voteType === 'rockPaperScissors'">Paper</button>
+  <button (click)="submitVote('scissors')" *ngIf="voteType === 'rockPaperScissors'">Scissors</button>
 </div>
 <button (click)="endVote()" *ngIf="isVotingEnded">End Vote</button>
 <div>

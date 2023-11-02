@@ -12,6 +12,9 @@ export class VoteComponent implements OnInit {
   isVotingStarted: boolean = false;
   isVotingEnded: boolean  = false;
   votingTopic: string = '';
+  voteTopic: string | null = null; // 初始化为 null 或其他默认值
+  voteType: string | null = null;
+
   constructor(private websocketService: WebsocketService) {}
 
   ngOnInit() {
@@ -32,18 +35,21 @@ export class VoteComponent implements OnInit {
     );
 
   }
-  
-  startVoteWithTopic() {
-    // 检查投票主题是否为空
-    if (this.votingTopic.trim() === '') {
+  startVote(voteType: string, topic: string) {
+    this.voteType = voteType;
+    if (topic.trim() === '') {
       // 如果主题为空，不开始投票
       return;
     }
-
-    // 触发投票并传递主题
-    this.websocketService.startVote(this.votingTopic).subscribe(() => {
-      this.isVotingStarted = true; // 开始投票后显示内容
-      console.log('Voting started with topic: ' + this.votingTopic);
+  
+    this.websocketService.startVote(voteType, topic).subscribe((response: any) => {
+      if (response.message) {
+        const match = response.message.match(/Voting started for .+ with topic: (.+)\./);
+        if (match) {
+          this.voteTopic = match[1];
+          this.isVotingStarted = true; // 设置投票已经开始
+        }
+      }
     });
   }
 
@@ -61,6 +67,17 @@ export class VoteComponent implements OnInit {
     this.submitVote('disagree');
   }
 
+  voteRock() {
+    this.submitVote('rock');
+  }
+
+  votePaper() {
+    this.submitVote('paper');
+  }
+
+  voteScissors() {
+    this.submitVote('scissors');
+  }
   public submitVote(choice: string): any {
     if (this.vote.trim() !== '') {
       this.websocketService.submitVote(this.vote, choice).subscribe(() => {

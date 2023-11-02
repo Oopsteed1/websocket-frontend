@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/internal/observable/dom/WebSocketSubject';
 
 @Injectable({
@@ -19,10 +20,12 @@ export class WebsocketService {
     return this.socket;
   }
 
-  startVote(votingTopic: string) {
+  startVote(voteType: string, topic: string): Observable<any> {
     // 创建一个 HttpParams 对象来包含查询参数
-    const params = new HttpParams().set('topic', votingTopic);
-
+    const params = new HttpParams()
+      .set('voteType', voteType)
+      .set('topic', topic);
+  
     // 发起 GET 请求，包括查询参数
     return this.http.get('http://localhost:3000/api/start-vote', { params });
   }
