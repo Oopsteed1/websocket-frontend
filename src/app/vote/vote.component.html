@@ -9,7 +9,7 @@
     <div *ngIf="messageVisible" class="typeMessage">{{ typeMessage }}</div>
     <div class="voteType">
       <span>
-        <p>贊成反對</p>
+        <p>投票</p>
         <img src="../../assets/icon/vote.png" class="topicIcon" (click)="startVote('agreeOrDisagree', votingTopic)" >
       </span>
       <span>
@@ -26,7 +26,7 @@
 
   <!-- 贊成反對 -->
   <div *ngIf="isVotingStarted && !isHideVoteAgreeOrDisagree && voteType  == 'agreeOrDisagree'">
-    <h1>投票方式: 贊成/反對</h1>
+    <h1>投票方式: 投票</h1>
     <h2>{{ message }}</h2>
     <div class="error-message">
       {{ errorMsg }}
