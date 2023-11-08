@@ -1,0 +1,85 @@
+.topicIcon {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.back {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+.backText {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.backText {
+  display: block;
+}
+.voteType {
+  display: flex;
+  justify-content: space-around;
+  gap: 50px;
+}
+.typeMessage,
+.error-message {
+  color: red;
+}
+
+.topicIconContainer {
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffffff; 
+}
+
+.card {
+  border: 1px solid #333;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  padding: 20px; 
+  text-align: center;
+  width: 500px;
+  height: 375px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button {
+  border: none;
+  border-radius: 10px;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.input {
+  border: 2px solid #333;
+  border-radius: 10px; 
+  padding: 10px;
+  width: 80%;
+  font-size: 16px;
+  background-color: #f2f2f2;
+  color: #333;
+  outline: none;
+}

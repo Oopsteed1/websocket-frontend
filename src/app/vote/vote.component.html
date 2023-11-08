@@ -1,18 +1,109 @@
-<div *ngIf="!isVotingStarted">
-  <input type="text" [(ngModel)]="votingTopic" placeholder="Enter voting topic">
-  <button (click)="startVote('agreeOrDisagree', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Agree or Disagree</button>
-  <button (click)="startVote('rockPaperScissors', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Rock Paper Scissors</button>
-  <button (click)="startVote('lottery', votingTopic)" *ngIf="votingTopic.trim() !== ''">Start Vote with Lottery</button>
-</div>
-<div *ngIf="isVotingStarted && !isVotingEnded">
-  <input type="text" [(ngModel)]="vote" placeholder="Your Name">
-  <button (click)="submitVote('agree')" *ngIf="voteType === 'agreeOrDisagree'">Agree</button>
-  <button (click)="submitVote('disagree')" *ngIf="voteType === 'agreeOrDisagree'">Disagree</button>
-  <button (click)="submitVote('rock')" *ngIf="voteType === 'rockPaperScissors'">Rock</button>
-  <button (click)="submitVote('paper')" *ngIf="voteType === 'rockPaperScissors'">Paper</button>
-  <button (click)="submitVote('scissors')" *ngIf="voteType === 'rockPaperScissors'">Scissors</button>
-</div>
-<button (click)="endVote()" *ngIf="isVotingEnded">End Vote</button>
-<div>
-  <p>{{ message }}</p>
+<div class="container">
+  <div class="card">
+    <img src="../../assets/icon/back.png" class="back" (click)="back()" (mouseenter)="showResetText = true" (mouseleave)="showResetText = false"/>
+    <span *ngIf="showResetText" class="backText">回到首頁</span>
+  <!-- 輸入Topic後 顯示贊成反對 / 剪刀石頭布 / 投票按紐 -->
+  <div *ngIf="!isVotingStarted">
+    <h1>請輸入你想要進行投票的問題</h1>
+    <input type="text" [(ngModel)]="votingTopic" placeholder="請輸入投票主題" class="input">
+    <div *ngIf="messageVisible" class="typeMessage">{{ typeMessage }}</div>
+    <div class="voteType">
+      <span>
+        <p>贊成反對</p>
+        <img src="../../assets/icon/vote.png" class="topicIcon" (click)="startVote('agreeOrDisagree', votingTopic)" >
+      </span>
+      <span>
+        <p>剪刀石頭布</p>
+        <img src="../../assets/icon/rock-paper-scissors.png" class="topicIcon" (click)="startVote('rockPaperScissors', votingTopic)"> 
+      </span>
+      <span>
+        <p>抽籤</p>
+        <img src="../../assets/icon/lottery.png" class="topicIcon" (click)="startVote('lottery', votingTopic)" >  
+      </span>
+
+    </div>
+  </div>
+
+  <!-- 贊成反對 -->
+  <div *ngIf="isVotingStarted && !isHideVoteAgreeOrDisagree && voteType  == 'agreeOrDisagree'">
+    <h1>投票方式: 贊成/反對</h1>
+    <h2>{{ message }}</h2>
+    <div class="error-message">
+      {{ errorMsg }}
+    </div>
+    <div *ngIf="messageVisible" class="typeMessage">{{ voteMessage }}</div>
+    <input type="text" [(ngModel)]="vote" placeholder="請輸入名字" class="input">
+    <div class="voteType">
+      <span>
+        <p>贊成</p>
+        <img src="../../assets/icon/agree.png" class="topicIcon" (click)="voteAgree()">  
+      </span>
+      <span>
+        <p>反對</p>
+        <img src="../../assets/icon/disagree.png" class="topicIcon" (click)="voteDisagree()">  
+      </span>
+    </div>
+    <p *ngIf="!isHideAgreeOrDisagreeButton" class="button">{{ countdown }}秒後自動獲取投票結果</p>
+  </div>
+
+  <!-- 贊成反對 -->
+  <div *ngIf="isVotingEnded && getVoteResult && isHideVoteAgreeOrDisagree && voteType  == 'agreeOrDisagree'">
+    <div class="voteType">
+      <div>
+        <h2>贊成</h2>
+        <img src="../../assets/icon/agree.png" class="topicIcon">
+        <h2>{{ agreeCount }}</h2>
+      </div>
+      <div>
+        <h2>反對</h2>
+        <img src="../../assets/icon/disagree.png" class="topicIcon">  
+        <h2>{{ disagreeCount }}</h2>
+      </div>
+    </div>
+    <div>
+      <h2>投票結果:{{ winner }}</h2>
+    </div>
+  </div>
+
+
+  <!-- 抽籤 -->
+  <div *ngIf="isVotingStarted && voteType === 'lottery'">
+    <h1>投票方式: 抽籤</h1>
+    <h2>{{ message }}</h2>
+    <input [(ngModel)]="lotteryName" placeholder="請輸入名字" class="input">
+    <button (click)="submitName()" class="button lotteryBtn">新增</button>
+    <p class="button lotteryBtn" *ngIf="!isHideLotteryButton">{{ lotteryCountdown }}秒後自動獲取抽籤結果</p>
+    <h2 *ngIf="lotteryWinner">得獎者 : {{ lotteryWinner }}</h2>
+    <div *ngIf="lotteryErrorMessage" class="error-message">{{ lotteryErrorMessage }}</div>
+  </div>
+
+
+  <!-- 剪刀石頭布 -->
+  <div *ngIf="isVotingStarted && voteType == 'rockPaperScissors'">
+    <h1>投票方式: 剪刀石頭布</h1>
+    <input type="text" [(ngModel)]="rockPaperScissorsPlayerName" placeholder="請輸入名字" class="input">
+    <div *ngIf="messageVisible" class="typeMessage">{{ voteMessage }}</div>
+    <div class="topicIconContainer">
+      <div class="iconContainer">
+        <p>石頭</p>
+        <img src="../../assets/icon/rock.png" (click)="voteRock()" class="topicIcon">
+      </div>
+      <div class="iconContainer">
+        <p>布</p>
+        <img src="../../assets/icon/paper.png" (click)="votePaper()" class="topicIcon">
+      </div>
+      <div class="iconContainer">
+        <p>剪刀</p>
+        <img src="../../assets/icon/scissors.png" (click)="voteScissors()" class="topicIcon">
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isVotingRPSEnded && voteType == 'rockPaperScissors'">
+    <div class="error-message">
+      {{ errorMsg }}
+    </div>
+    <p class="button" *ngIf="!isHideRPSButton">等待兩名玩家後自動獲取結果</p>
+    <h2 *ngIf="showResult">{{finalResult}}</h2>
+  </div>
+  </div>
 </div>
